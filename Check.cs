@@ -10,13 +10,13 @@ namespace Task1
         {
 
         }
-        public void print(Buy buy)
+
+        public string PrintBuy(Buy buy)
         {
             if (buy == null)
-                throw new ArgumentNullException("Buy not set");
+                throw new ArgumentException("Buy not set");
 
-            Console.WriteLine($"Name: {buy.Prod.Name} Price: {buy.Prod.Price} Weight: {buy.Prod.Weight}\nCount: {buy.Count}\nTotal price: " +
-                    $"{buy.TotalPrice}\nTotal weight: {buy.TotalWeight}\n");
+            return buy.ToString();
         }
     }
 

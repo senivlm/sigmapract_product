@@ -6,15 +6,57 @@ namespace Task1
 {
     class Product
     {
-        internal string Name { get; set; }
-        internal double Price { get; set; }
-        internal double Weight { get; set; }
+        private string name;
+        private double price;
+        private double weight;
+
+        public string Name {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentException("The product name cannot be empty");
+                else
+                    name = value;
+            }
+        }
+        public double Price
+        {
+            get
+            {
+                return price;
+            }
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("The product price cannot be <= 0");
+                else
+                    price = value;
+            }
+        }
+        public double Weight
+        {
+            get
+            {
+                return weight;
+            }
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("The product weight cannot be <= 0");
+                else
+                    weight = value;
+            }
+        }
 
         public Product(string name, double price, double weight)
         {
-            Name = (name == null) ? throw new ArgumentNullException("The product name cannot be empty") : name;
-            Price = (price <= 0) ? throw new ArgumentNullException("The product name cannot be empty") : price;
-            Weight = (weight <= 0) ? throw new ArgumentNullException("The product name cannot be empty") : weight;
+            Name = name;
+            Price = price;
+            Weight = weight;
         }
 
         public override bool Equals(object obj)
@@ -31,12 +73,12 @@ namespace Task1
 
         public override string ToString()
         {
-            return "This is Product class";
+            return $"Name: {Name} Price: {Price} Weight: {Weight}";
         }
 
-        virtual public void changePrice(int percent)
+        virtual public void ChangePrice(double percent)
         {
-            Price *= 1 + (double)percent / 100;
+            Price *= 1 + percent / 100;
         }
     }
 }

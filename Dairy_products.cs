@@ -9,9 +9,24 @@ namespace Task1
         //Standarts
         readonly List<(int, int)> ExpirationDatePercent = new List<(int, int)> { (7, 15), (365, 8), (int.MaxValue, 2) };
 
-        public int ExpirationDate { get; set; }
+        private int expirationDate;
 
-        public Dairy_products(int expirationDate, string name, double price, double weight)
+        public int ExpirationDate
+        {
+            get
+            {
+                return expirationDate;
+            }
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("Invalid expiration date");
+                else
+                    expirationDate = value;
+            }
+        }
+
+        public Dairy_products(string name, double price, double weight, int expirationDate)
             : base(name, price, weight)
         {
             ExpirationDate = expirationDate;
@@ -19,10 +34,10 @@ namespace Task1
 
         public override string ToString()
         {
-            return "This is Dairy_products class";
+            return base.ToString() + $"\nExpirationDate: {ExpirationDate}";
         }
 
-        public override void changePrice(int percent)
+        public override void ChangePrice(double percent)
         {
             int tempPercent = ExpirationDatePercent[ExpirationDatePercent.Count - 1].Item2;
             foreach (var elem in ExpirationDatePercent)

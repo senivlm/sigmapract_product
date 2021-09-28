@@ -8,9 +8,9 @@ namespace Task1
     {
         public enum Category
         {
-            HighestGrade = 10,
-            FirstGrade = 7,
-            SecondGrade = 3
+            Highest = 10,
+            First = 7,
+            Second = 3
         }
 
         public enum Type
@@ -24,7 +24,7 @@ namespace Task1
         public Category CategoryField { get; set; }
         public Type TypeField { get; set; }
 
-        public Meat(Category category, Type type, string name, double price, double weight)
+        public Meat(string name, double price, double weight, Category category, Type type)
             : base(name, price, weight)
         {
             CategoryField = category;
@@ -36,7 +36,7 @@ namespace Task1
             if (obj.GetType() == typeof(Meat))
             {
                 Meat meat = (Meat)obj;
-                if ((meat.CategoryField == CategoryField) && (meat.TypeField == TypeField))
+                if ((meat.CategoryField == CategoryField) && (meat.TypeField == TypeField) && ((Product)this).Equals((Product)meat) )
                     return true;
             }
 
@@ -45,12 +45,12 @@ namespace Task1
 
         public override string ToString()
         {
-            return "This is Meat class";
+            return base.ToString() + $"\nCategory: {CategoryField} Type: {TypeField}\n";
         }
 
-        public override void changePrice(int percent)
+        public override void ChangePrice(double percent)
         {
-            Price *= 1 + (double)(percent + CategoryField) / 100;
+            Price *= 1 + (percent + (double)CategoryField) / 100;
         }
     }
 }
