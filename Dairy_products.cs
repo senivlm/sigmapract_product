@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Task1
 {
-    class Dairy_products: Product
+    //Summary:
+    //    Contains data about dairy
+    class Dairy_products : Product
     {
         //Standarts
         readonly List<(int, int)> ExpirationDatePercent = new List<(int, int)> { (7, 15), (365, 8), (int.MaxValue, 2) };
@@ -26,6 +28,9 @@ namespace Task1
             }
         }
 
+        //Exceptions:
+        //    ArgumentException
+        //    ArgumentNullException
         public Dairy_products(string name, double price, double weight, int expirationDate)
             : base(name, price, weight)
         {
@@ -37,6 +42,8 @@ namespace Task1
             return base.ToString() + $"\nExpirationDate: {ExpirationDate}";
         }
 
+        //Exceptions:
+        //    ArgumentException
         public override void ChangePrice(double percent)
         {
             int tempPercent = ExpirationDatePercent[ExpirationDatePercent.Count - 1].Item2;
@@ -44,7 +51,10 @@ namespace Task1
                 if (percent <= elem.Item1)
                     tempPercent = elem.Item2;
 
-            Price *= 1 + (double)(percent + tempPercent) / 100;
+            if ((percent <= -100) && (int.MaxValue / Price) <= ((percent + tempPercent) / 100))
+                throw new ArgumentException("Percent is too small or too large");
+            else
+                Price *= 1 + (double)(percent + tempPercent) / 100;
         }
     }
 }

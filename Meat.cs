@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Task1
 {
-    class Meat: Product
+    //Summary:
+    //    Class contains data about meat
+    class Meat : Product
     {
         public enum Category
         {
@@ -24,6 +26,9 @@ namespace Task1
         public Category CategoryField { get; set; }
         public Type TypeField { get; set; }
 
+        //Exceptions:
+        //    ArgumentException
+        //    ArgumentNullException
         public Meat(string name, double price, double weight, Category category, Type type)
             : base(name, price, weight)
         {
@@ -31,6 +36,8 @@ namespace Task1
             TypeField = type;
         }
 
+        //Summary:
+        //    Checks if all fields are the same
         public override bool Equals(object obj)
         {
             if (obj.GetType() == typeof(Meat))
@@ -45,12 +52,17 @@ namespace Task1
 
         public override string ToString()
         {
-            return base.ToString() + $"\nCategory: {CategoryField} Type: {TypeField}\n";
+            return base.ToString() + $"\nCategory: {CategoryField} Type: {TypeField}";
         }
 
+        //Exceptions:
+        //    ArgumentException
         public override void ChangePrice(double percent)
         {
-            Price *= 1 + (percent + (double)CategoryField) / 100;
+            if ((percent <= -100) && (int.MaxValue / Price) <= ((percent + (double)CategoryField) / 100))
+                throw new ArgumentException("Percent is too small or too large");
+            else
+                Price *= 1 + (percent + (double)CategoryField) / 100;
         }
     }
 }

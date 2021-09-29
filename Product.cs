@@ -4,6 +4,8 @@ using System.Text;
 
 namespace Task1
 {
+    //Summary:
+    //    Contains data about product
     class Product
     {
         private string name;
@@ -18,7 +20,7 @@ namespace Task1
             set
             {
                 if (value == null)
-                    throw new ArgumentException("The product name cannot be empty");
+                    throw new ArgumentNullException("The product name cannot be empty");
                 else
                     name = value;
             }
@@ -52,6 +54,9 @@ namespace Task1
             }
         }
 
+        //Exceptions:
+        //    ArgumentException
+        //    ArgumentNullException
         public Product(string name, double price, double weight)
         {
             Name = name;
@@ -59,6 +64,8 @@ namespace Task1
             Weight = weight;
         }
 
+        //Summary:
+        //    Checks if name both Product are the same
         public override bool Equals(object obj)
         {
             if (obj.GetType() == typeof(Product))
@@ -76,9 +83,14 @@ namespace Task1
             return $"Name: {Name} Price: {Price} Weight: {Weight}";
         }
 
+        //Exceptions:
+        //    ArgumentException
         virtual public void ChangePrice(double percent)
         {
-            Price *= 1 + percent / 100;
+            if ((percent <= -100) && (int.MaxValue / Price) <= (percent / 100))
+                throw new ArgumentException("Percent is too small or too large");
+            else
+                Price *= 1 + percent / 100;
         }
     }
 }

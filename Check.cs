@@ -4,6 +4,8 @@ using System.Text;
 
 namespace Task1
 {
+    //Summary:
+    //    Class prints data about Buy
     sealed class Check
     {
         public Check()
@@ -11,10 +13,12 @@ namespace Task1
 
         }
 
+        //Exception:
+        //    ArgumentNullException
         public string PrintBuy(Buy buy)
         {
             if (buy == null)
-                throw new ArgumentException("Buy not set");
+                throw new ArgumentNullException("Buy not set");
 
             return buy.ToString();
         }

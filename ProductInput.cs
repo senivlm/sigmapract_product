@@ -4,8 +4,14 @@ using System.Text;
 
 namespace Task1
 {
+    //Summary:
+    //    Class for reading user input
     static class ProductInput
     {
+        //Summary:
+        //    Reads from console
+        //Returns:
+        //    Data for Storage
         static public string StorageConsoleProductInput()
         {
             string input = "";

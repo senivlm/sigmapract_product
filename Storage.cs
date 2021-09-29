@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Task1
 {
+    //Summary:
+    //    Class contains Products in Storage
     class Storage
     {
         public List<Product> Products { get; private set; } = new List<Product>();
@@ -33,6 +35,8 @@ namespace Task1
 
         }
 
+        //Summary:
+        //    Fills Storage with Products
         public void ReadInput()
         {
             StringReader inputStringReader = new StringReader(ProductInput.StorageConsoleProductInput());
@@ -61,6 +65,10 @@ namespace Task1
             }
         }
 
+        //Summary:
+        //    Finds in Products Meat
+        //Returns:
+        //    List of Meat
         public List<Product> FindMeatProduct()
         {
             List<Product> meatProducts = new List<Product>();
@@ -72,6 +80,10 @@ namespace Task1
             return meatProducts;
         }
 
+        //Summary:
+        //    Change price for all Products
+        //Exceptions:
+        //    ArgumentException
         public void ChangePrice(double percent)
         {
             foreach (var elem in Products)
@@ -88,6 +100,8 @@ namespace Task1
             return output;
         }
 
+        //Summary:
+        //    Print all Products data
         public void Print()
         {
             this.ToString();
