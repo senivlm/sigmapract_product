@@ -7,22 +7,22 @@ namespace Task1
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
             Product product1 = new Product("Apple", 5.50, 0.120);
             Product product2 = new Product("Sugar", 30, 1);
             Product product3 = new Product("Bread", 15, 0.5);
 
-            Buy buy1 = new Buy(product1, 7);
-            Buy buy2 = new Buy(product2, 2);
-            Buy buy3 = new Buy(product3, 4);
+            List<Product> list = new List<Product>() { product1, product2, product3 };
+            Buy buy = new Buy(list, list.Count);
 
             Check check = new Check();
-            check.print(buy1);
-            check.print(buy2);
-            check.print(buy3);
+            Console.WriteLine(check.PrintBuy(buy));
 
             Storage storage = new Storage();
-            storage.readInput();
-            storage.print();
+            storage.ReadInput();
+            Console.WriteLine(storage.Print());
         }
     }
 }

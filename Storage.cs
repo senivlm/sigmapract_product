@@ -95,16 +95,18 @@ namespace Task1
             string output = "";
 
             for(int i = 0; i < Products.Count; i++)
-                output += $"Product {i + 1}:\n" + this[i].ToString() + "\n";
+                output += $"Product {i + 1}:\n" + this[i].ToString();
 
             return output;
         }
 
         //Summary:
         //    Print all Products data
-        public void Print()
+        //Returns:
+        //    String with Products data
+        public string Print()
         {
-            this.ToString();
+            return this.ToString();
         }
     }
 }

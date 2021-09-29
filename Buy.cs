@@ -86,7 +86,7 @@ namespace Task1
             string str = "";
             foreach (var elem in ProductsList)
                 str += $"Product: " + elem.ToString();
-            return str + $"\nCount: {Count}\nTotal price: {TotalPrice}\nTotal weight: {TotalWeight}";
+            return str + $"Count: {Count}\nTotal price: {TotalPrice}\nTotal weight: {TotalWeight}\n";
         }
 
         //Summary:

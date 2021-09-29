@@ -39,7 +39,7 @@ namespace Task1
 
         public override string ToString()
         {
-            return base.ToString() + $"\nExpirationDate: {ExpirationDate}";
+            return base.ToString() + $"ExpirationDate: {ExpirationDate}\n";
         }
 
         //Exceptions:

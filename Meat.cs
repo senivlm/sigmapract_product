@@ -52,7 +52,7 @@ namespace Task1
 
         public override string ToString()
         {
-            return base.ToString() + $"\nCategory: {CategoryField} Type: {TypeField}";
+            return base.ToString() + $"Category: {CategoryField} Type: {TypeField}\n";
         }
 
         //Exceptions:

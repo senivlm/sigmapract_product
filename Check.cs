@@ -20,7 +20,7 @@ namespace Task1
             if (buy == null)
                 throw new ArgumentNullException("Buy not set");
 
-            return buy.ToString();
+            return "CHECK:\n" + buy.ToString();
         }
     }
 
