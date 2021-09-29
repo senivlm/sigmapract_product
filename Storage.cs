@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Task1
 {
     class Storage
     {
-        public List<Product> products { get; set; } = new List<Product>();
+        public List<Product> Products { get; private set; } = new List<Product>();
 
         public Product this[int index]
         {
             get
             {
-                return products[index];
+                if (index < 0 || index >= Products.Count)
+                    throw new IndexOutOfRangeException("Index out of range");
+                else
+                    return Products[index];
             }
 
             set
             {
-                products[index] = value;
+                if (index < 0 || index >= Products.Count)
+                    throw new IndexOutOfRangeException("Index out of range");
+                else
+                    Products[index] = value;
             }
         }
 
@@ -26,50 +33,64 @@ namespace Task1
 
         }
 
-        public void readInput()
+        public void ReadInput()
         {
-            Console.WriteLine("Виберіть режим заповнення: 1 - вручну, 2 - автоматично;");
+            StringReader inputStringReader = new StringReader(ProductInput.StorageConsoleProductInput());
 
-            if (Convert.ToInt32(Console.ReadLine()) == 1)
+            int productsCount = Convert.ToInt32(inputStringReader.ReadLine());
+            for (int i = 0; i < productsCount; i++)
             {
-                Console.WriteLine("Виберіть кількістю товарів:");
+                int productsType = Convert.ToInt32(inputStringReader.ReadLine());
+                string[] productInfo = inputStringReader.ReadLine().Split(" ");
 
-                int countProduct = Convert.ToInt32(Console.ReadLine());
-                for (int i = 0; i < countProduct; i++)
+                switch (productsType)
                 {
-                    Console.WriteLine($"Введіть {i + 1} товар");
-                    products.Add(new Product(Console.ReadLine(), Convert.ToDouble(Console.ReadLine()), Convert.ToDouble(Console.ReadLine())));
+                    case 1:
+                        Meat.Category category;
+                        Meat.Type type;
+                        if (Enum.TryParse(productInfo[3], out category) && Enum.TryParse(productInfo[4], out type))
+                            Products.Add(new Meat(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), category, type));
+                        break;
+                    case 2:
+                        Products.Add(new Dairy_products(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), Convert.ToInt32(productInfo[3])));
+                        break;
+                    case 3:
+                        Products.Add(new Product(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2])));
+                        break;
                 }
             }
-            else
-            {
-                products.Add(new Product("Apple", 5.50, 0.120));
-                products.Add(new Product("Sugar", 30, 1));
-                products.Add(new Product("Bread", 15, 0.5));
-            }    
         }
 
-        public List<Product> findMeatProduct()
+        public List<Product> FindMeatProduct()
         {
             List<Product> meatProducts = new List<Product>();
 
-            foreach (var elem in products)
+            foreach (var elem in Products)
                 if (elem.GetType() == typeof(Meat))
                     meatProducts.Add(elem);
 
             return meatProducts;
         }
 
-        public void changePrice(int percent)
+        public void ChangePrice(double percent)
         {
-            foreach (var elem in products)
-                elem.Price *= 1 + (double)percent / 100;
+            foreach (var elem in Products)
+                elem.ChangePrice(percent);
         }
 
-        public void print()
+        public override string ToString()
         {
-            foreach (var elem in products)
-                Console.WriteLine($"Name: {elem.Name} Price: {elem.Price} Weight: {elem.Weight}");
+            string output = "";
+
+            for(int i = 0; i < Products.Count; i++)
+                output += $"Product {i + 1}:\n" + this[i].ToString() + "\n";
+
+            return output;
+        }
+
+        public void Print()
+        {
+            this.ToString();
         }
     }
 }
