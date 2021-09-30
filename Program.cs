@@ -10,19 +10,33 @@ namespace Task1
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
-            Product product1 = new Product("Apple", 5.50, 0.120);
-            Product product2 = new Product("Sugar", 30, 1);
-            Product product3 = new Product("Bread", 15, 0.5);
+            try
+            {
+                Product product1 = new Product("Apple", 5.50, 0.120);
+                Product product2 = new Product("Sugar", 30, 1);
+                Product product3 = new Product("Bread", 15, 0.5);
 
-            List<Product> list = new List<Product>() { product1, product2, product3 };
-            Buy buy = new Buy(list, list.Count);
+                List<Product> list = new List<Product>() { product1, product2, product3 };
+                Buy buy = new Buy(list, list.Count);
 
-            Check check = new Check();
-            Console.WriteLine(check.PrintBuy(buy));
+                Check check = new Check();
+                Console.WriteLine(check.PrintBuy(buy));
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
 
-            Storage storage = new Storage();
-            storage.ReadInput();
-            Console.WriteLine(storage.Print());
+            try
+            {
+                Storage storage = new Storage();
+                storage.ReadInput();
+                Console.WriteLine(storage.Print());
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine("Error in Storage: " + exception.Message);
+            }
         }
     }
 }
