@@ -92,7 +92,7 @@ namespace Task1
 
         public override string ToString()
         {
-            string output = "";
+            string output = "\nStorage:\n";
 
             for(int i = 0; i < Products.Count; i++)
                 output += $"Product {i + 1}:\n" + this[i].ToString();

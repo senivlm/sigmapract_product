@@ -16,7 +16,7 @@ namespace Task1
         {
             string input = "";
 
-            Console.WriteLine("Виберіть режим заповнення: 1 - вручну, 2 - автоматично;");
+            Console.WriteLine("Заповнення складу:\nВиберіть режим заповнення: 1 - вручну, 2 - автоматично;");
             int regime = Convert.ToInt32(Console.ReadLine());
 
             if (regime == 1)
