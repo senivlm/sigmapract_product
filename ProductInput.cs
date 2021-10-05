@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Task1
@@ -59,6 +60,15 @@ namespace Task1
             {
                 input += "3\n3\nApple 5.50 0.120\n3\nSugar 30 1\n3\nBread 15 0.5";
             }
+
+            return input;
+        }
+
+        static public string StorageFileProductInput()
+        {
+            StreamReader streamReader = new StreamReader("../../../input.txt");
+            string input = streamReader.ReadToEnd();
+            streamReader.Close();
 
             return input;
         }

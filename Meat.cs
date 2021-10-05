@@ -29,8 +29,8 @@ namespace Task1
         //Exceptions:
         //    ArgumentException
         //    ArgumentNullException
-        public Meat(string name, double price, double weight, Category category, Type type)
-            : base(name, price, weight)
+        public Meat(string name, double price, double weight, int expirationDate, DateTime dateTime, Category category, Type type)
+            : base(name, price, weight, expirationDate, dateTime)
         {
             CategoryField = category;
             TypeField = type;
@@ -63,6 +63,27 @@ namespace Task1
                 throw new ArgumentException("Percent is too small or too large");
             else
                 Price *= 1 + (percent + (double)CategoryField) / 100;
+        }
+
+        public override void Parse(string s)
+        {
+            string[] inputData = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            if (inputData.Length != 7)
+                throw new ArgumentException("Data in line is incorrect");
+
+            string baseInput = string.Join(" ", inputData, 0, inputData.Length - 2);
+            base.Parse(s);
+
+            Category category;
+            Type type;
+            if (Enum.TryParse(inputData[5], out category) && Enum.TryParse(inputData[6], out type))
+            {
+                CategoryField = category;
+                TypeField = type;
+            }
+            else
+                throw new ArgumentException("Category or type are incorrect");
         }
     }
 }

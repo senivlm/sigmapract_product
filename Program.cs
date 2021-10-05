@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Task1
 {
@@ -12,9 +13,9 @@ namespace Task1
 
             try
             {
-                Product product1 = new Product("Apple", 5.50, 0.120);
-                Product product2 = new Product("Sugar", 30, 1);
-                Product product3 = new Product("Bread", 15, 0.5);
+                Product product1 = new Product("Apple", 5.50, 0.120, 5, new DateTime(2021, 9, 30));
+                Product product2 = new Product("Sugar", 30, 1, 10, new DateTime(2021, 7, 31));
+                Product product3 = new Product("Bread", 15, 0.5, 7, new DateTime(2021, 10, 6));
 
                 List<Product> list = new List<Product>() { product1, product2, product3 };
                 Buy buy = new Buy(list, list.Count);
@@ -33,7 +34,11 @@ namespace Task1
                 storage.ReadInput();
                 Console.WriteLine(storage.Print());
             }
-            catch(Exception exception)
+            catch (FileNotFoundException exception)
+            {
+                Console.WriteLine("Error in Storage: " + exception.Message);
+            }
+            catch (Exception exception)
             {
                 Console.WriteLine("Error in Storage: " + exception.Message);
             }

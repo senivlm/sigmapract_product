@@ -11,6 +11,8 @@ namespace Task1
         private string name;
         private double price;
         private double weight;
+        private int expirationDate;
+        private DateTime createDateTime;
 
         public string Name {
             get
@@ -54,14 +56,46 @@ namespace Task1
             }
         }
 
+        public int ExpirationDate
+        {
+            get
+            {
+                return expirationDate;
+            }
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("Invalid expiration date");
+                else
+                    expirationDate = value;
+            }
+        }
+
+        public DateTime CreateDateTime
+        {
+            get
+            {
+                return createDateTime;
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("Create date time cannot be null");
+                else
+                    createDateTime = value;
+            }
+        }
+
         //Exceptions:
         //    ArgumentException
         //    ArgumentNullException
-        public Product(string name, double price, double weight)
+        public Product(string name, double price, double weight, int expirationDate, DateTime dateTime)
         {
             Name = name;
             Price = price;
             Weight = weight;
+            ExpirationDate = expirationDate;
+            CreateDateTime = dateTime;
         }
 
         //Summary:
@@ -80,7 +114,10 @@ namespace Task1
 
         public override string ToString()
         {
-            return $"Name: {Name} Price: {Price} Weight: {Weight}\n";
+            string info = $"Name: {Name} Price: {Price} Weight: {Weight} Expiration date: {ExpirationDate} " +
+                $"Create date: {CreateDateTime.Day}.{CreateDateTime.Month}.{CreateDateTime.Year}\n";
+
+            return info;
         }
 
         //Exceptions:
@@ -91,6 +128,22 @@ namespace Task1
                 throw new ArgumentException("Percent is too small or too large");
             else
                 Price *= 1 + percent / 100;
+        }
+
+        virtual public void Parse(string s)
+        {
+            string[] inputData = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            if (inputData.Length != 5)
+                throw new ArgumentException("Data in line is incorrect");
+
+            Name = inputData[0];
+            Price = Convert.ToDouble(inputData[1]);
+            Weight = Convert.ToDouble(inputData[2]);
+            ExpirationDate = Convert.ToInt32(inputData[3]);
+
+            string[] dateList = inputData[4].Split(".");
+            CreateDateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
         }
     }
 }

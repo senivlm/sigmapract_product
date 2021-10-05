@@ -39,7 +39,7 @@ namespace Task1
         //    Fills Storage with Products
         public void ReadInput()
         {
-            StringReader inputStringReader = new StringReader(ProductInput.StorageConsoleProductInput());
+            StringReader inputStringReader = new StringReader(ProductInput.StorageFileProductInput());
 
             int productsCount = Convert.ToInt32(inputStringReader.ReadLine());
             for (int i = 0; i < productsCount; i++)
@@ -52,14 +52,28 @@ namespace Task1
                     case 1:
                         Meat.Category category;
                         Meat.Type type;
-                        if (Enum.TryParse(productInfo[3], out category) && Enum.TryParse(productInfo[4], out type))
-                            Products.Add(new Meat(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), category, type));
+                        if (Enum.TryParse(productInfo[5], out category) && Enum.TryParse(productInfo[6], out type))
+                        {
+                            string[] dateList = productInfo[4].Split(".");
+                            DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
+                            Products.Add(new Meat(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), 
+                                Convert.ToInt32(productInfo[3]), dateTime, category, type));
+                        }
                         break;
                     case 2:
-                        Products.Add(new Dairy_products(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), Convert.ToInt32(productInfo[3])));
+                        {
+                            string[] dateList = productInfo[4].Split(".");
+                            DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
+                            Products.Add(new Dairy_products(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), 
+                                Convert.ToInt32(productInfo[3]), dateTime));
+                        }
                         break;
                     case 3:
-                        Products.Add(new Product(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2])));
+                        {
+                            string[] dateList = productInfo[4].Split(".");
+                            DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
+                            Products.Add(new Product(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), Convert.ToInt32(productInfo[3]), dateTime));
+                        }
                         break;
                 }
             }
