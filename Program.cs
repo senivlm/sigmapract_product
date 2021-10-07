@@ -32,6 +32,8 @@ namespace Task1
             {
                 Storage storage = new Storage();
                 storage.ReadInput();
+                Console.Write("Enter path to output removed dairy products: ");
+                storage.RemoveDairyProduct(Console.ReadLine());
                 Console.WriteLine(storage.Print());
             }
             catch (FileNotFoundException exception)

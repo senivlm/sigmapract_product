@@ -39,7 +39,7 @@ namespace Task1
         //    Fills Storage with Products
         public void ReadInput()
         {
-            StringReader inputStringReader = new StringReader(ProductInput.StorageFileProductInput());
+            StringReader inputStringReader = new StringReader(ProductInput.StorageProductInput());
 
             int productsCount = Convert.ToInt32(inputStringReader.ReadLine());
             for (int i = 0; i < productsCount; i++)
@@ -92,6 +92,23 @@ namespace Task1
                     meatProducts.Add(elem);
 
             return meatProducts;
+        }
+
+        public void RemoveDairyProduct(string path)
+        {
+            StreamWriter writeFile = new StreamWriter(path, true);
+            writeFile.WriteLine("Date: " + DateTime.Now + "\tRemoved: ");
+
+            for (int i = 0; i < Products.Count; i++)
+                if (Products[i].GetType() == typeof(Dairy_products) && Products[i].CreateDateTime.AddDays(Products[i].ExpirationDate) < DateTime.Now)
+                {
+                    writeFile.Write(Products[i].ToString());
+                    Products.Remove(Products[i]);
+                    i--;
+                }
+
+            writeFile.WriteLine();
+            writeFile.Close();
         }
 
         //Summary:

@@ -65,6 +65,10 @@ namespace Task1
                 Price *= 1 + (percent + (double)CategoryField) / 100;
         }
 
+        //Summary:
+        //    Initialize object with data fro string
+        //Exceptions:
+        //    ArgumentException
         public override void Parse(string s)
         {
             string[] inputData = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);

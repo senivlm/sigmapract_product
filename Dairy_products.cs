@@ -39,5 +39,14 @@ namespace Task1
             else
                 Price *= 1 + (double)(percent + tempPercent) / 100;
         }
+
+        //Summary:
+        //    Initialize object with data fro string
+        //Exceptions:
+        //    ArgumentException
+        public override void Parse(string s)
+        {
+            base.Parse(s);
+        }
     }
 }

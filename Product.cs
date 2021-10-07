@@ -130,6 +130,10 @@ namespace Task1
                 Price *= 1 + percent / 100;
         }
 
+        //Summary:
+        //    Initialize object with data fro string
+        //Exceptions:
+        //    ArgumentException
         virtual public void Parse(string s)
         {
             string[] inputData = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
