@@ -10,6 +10,7 @@ namespace Task1
     {
         public enum Category
         {
+            //Standarts mark-up per category
             Highest = 10,
             First = 7,
             Second = 3
@@ -40,19 +41,25 @@ namespace Task1
         //    Checks if all fields are the same
         public override bool Equals(object obj)
         {
-            if (obj.GetType() == typeof(Meat))
+            if (obj.GetType().Name == typeof(Meat).Name)
             {
                 Meat meat = (Meat)obj;
-                if ((meat.CategoryField == CategoryField) && (meat.TypeField == TypeField) && ((Product)this).Equals((Product)meat) )
+                if (meat.Name == Name && meat.Price == Price && meat.Weight == Weight && meat.ExpirationDate == ExpirationDate &&
+                    meat.CreateDateTime == CreateDateTime && meat.CategoryField == CategoryField && meat.TypeField == TypeField)
                     return true;
             }
 
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return typeof(Meat).Name.GetHashCode() + ToString().GetHashCode();
+        }
+
         public override string ToString()
         {
-            return base.ToString() + $"Category: {CategoryField} Type: {TypeField}\n";
+            return base.ToString() + $"\nCategory: {CategoryField} Type: {TypeField}";
         }
 
         //Exceptions:
@@ -69,25 +76,22 @@ namespace Task1
         //    Initialize object with data fro string
         //Exceptions:
         //    ArgumentException
-        public override void Parse(string s)
+        public static new Meat Parse(string s)
         {
             string[] inputData = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            if (inputData.Length != 7)
-                throw new ArgumentException("Data in line is incorrect");
+            if (inputData.Length < 7)
+                throw new ArgumentException("Data is incorrect");
 
-            string baseInput = string.Join(" ", inputData, 0, inputData.Length - 2);
-            base.Parse(s);
+            Product baseProduct = Product.Parse(string.Join(" ", inputData, 0, inputData.Length - 2));
 
             Category category;
             Type type;
-            if (Enum.TryParse(inputData[5], out category) && Enum.TryParse(inputData[6], out type))
-            {
-                CategoryField = category;
-                TypeField = type;
-            }
-            else
+            if (!Enum.TryParse(inputData[5], out category) || !Enum.TryParse(inputData[6], out type) || 
+                !Enum.IsDefined(typeof(Category), category) || !Enum.IsDefined(typeof(Type), type))
                 throw new ArgumentException("Category or type are incorrect");
+
+            return new Meat(baseProduct.Name, baseProduct.Price, baseProduct.Weight, baseProduct.ExpirationDate, baseProduct.CreateDateTime, category, type);
         }
     }
 }

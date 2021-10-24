@@ -94,11 +94,10 @@ namespace Task1
         //    Data for Storage
         static public string StorageFileProductInput()
         {
-            StreamReader streamReader = new StreamReader("../../../input.txt");
-            string input = streamReader.ReadToEnd();
-            streamReader.Close();
-
-            return input;
+            using (StreamReader streamReader = new StreamReader("../../../files/input.txt"))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
     }
 }

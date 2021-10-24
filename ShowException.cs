@@ -6,7 +6,7 @@ namespace Task1
 {
     static class ShowException
     {
-        static public void ConsoleWrite(string output)
+        public static void ConsoleWrite(string output)
         {
             Console.WriteLine($"Error: {output}");
         }

@@ -8,8 +8,8 @@ namespace Task1
     //    Contains data about dairy
     class Dairy_products : Product
     {
-        //Standarts
-        readonly List<(int, int)> ExpirationDatePercent = new List<(int, int)> { (7, 15), (365, 8), (int.MaxValue, 2) };
+        //Standarts mark-up
+        readonly List<(int, int)> ExpirationDatePercent;
 
         //Exceptions:
         //    ArgumentException
@@ -17,7 +17,24 @@ namespace Task1
         public Dairy_products(string name, double price, double weight, int expirationDate, DateTime dateTime)
             : base(name, price, weight, expirationDate, dateTime)
         {
+            ExpirationDatePercent =  new List<(int, int)> { (7, 15), (365, 8), (int.MaxValue, 2) };
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType().Name == typeof(Dairy_products).Name)
+            {
+                Dairy_products dairyProduct = (Dairy_products)obj;
+                if (dairyProduct.Name == Name && dairyProduct.Price == Price && dairyProduct.Weight == Weight && 
+                    dairyProduct.ExpirationDate == ExpirationDate && dairyProduct.CreateDateTime == CreateDateTime)
+                    return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return typeof(Dairy_products).Name.GetHashCode() + ToString().GetHashCode();
         }
 
         public override string ToString()
@@ -44,9 +61,10 @@ namespace Task1
         //    Initialize object with data fro string
         //Exceptions:
         //    ArgumentException
-        public override void Parse(string s)
+        public static new Dairy_products Parse(string s)
         {
-            base.Parse(s);
+            Product baseProduct = Product.Parse(s);
+            return new Dairy_products(baseProduct.Name, baseProduct.Price, baseProduct.Weight, baseProduct.ExpirationDate, baseProduct.CreateDateTime);
         }
     }
 }
