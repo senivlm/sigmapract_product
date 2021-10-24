@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -9,7 +10,17 @@ namespace Task1
     //    Class contains Products in Storage
     class Storage
     {
-        public List<Product> Products { get; private set; } = new List<Product>();
+        //
+        public const string PATH = @"D:\Andrii\Programyvannya\C#\Sigma pract\Product\Task\output.txt";
+
+        public delegate void PrintMessageHandler(string message);
+        public delegate void PrintIncorrect(string path, string message);
+
+        public virtual event PrintMessageHandler OnAdd;
+        public virtual event PrintIncorrect OnWrongInput;
+        //
+
+        public List<Product> Products { get; }
 
         public Product this[int index]
         {
@@ -32,13 +43,15 @@ namespace Task1
 
         public Storage()
         {
-
+            Products = new List<Product>();
         }
 
         //Summary:
         //    Fills Storage with Products
         public void ReadInput()
         {
+            Products.Clear();
+
             StringReader inputStringReader = new StringReader(ProductInput.StorageProductInput());
 
             int productsCount = Convert.ToInt32(inputStringReader.ReadLine());
@@ -58,6 +71,10 @@ namespace Task1
                             DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
                             Products.Add(new Meat(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), 
                                 Convert.ToInt32(productInfo[3]), dateTime, category, type));
+                        }
+                        else
+                        {
+                            OnWrongInput?.Invoke(PATH, "Wrong product!");
                         }
                         break;
                     case 2:
@@ -79,6 +96,12 @@ namespace Task1
             }
         }
 
+        public void AddProduct(Product product)
+        {
+            OnAdd?.Invoke("Add Product to Storage");
+            Products.Add(product);
+        }
+
         //Summary:
         //    Finds in Products Meat
         //Returns:
@@ -94,21 +117,25 @@ namespace Task1
             return meatProducts;
         }
 
-        public void RemoveDairyProduct(string path)
+        //Summary:
+        //    Removes overdue Dairy Products and writes data in log
+        public void RemoveOverdueDairyProduct(string path)
         {
-            StreamWriter writeFile = new StreamWriter(path, true);
-            writeFile.WriteLine("Date: " + DateTime.Now + "\tRemoved: ");
+            using (StreamWriter writeFile = new StreamWriter(path, true))
+            {
+                writeFile.WriteLine("Date: " + DateTime.Now + "\tRemoved: ");
 
-            for (int i = 0; i < Products.Count; i++)
-                if (Products[i].GetType() == typeof(Dairy_products) && Products[i].CreateDateTime.AddDays(Products[i].ExpirationDate) < DateTime.Now)
-                {
-                    writeFile.Write(Products[i].ToString());
-                    Products.Remove(Products[i]);
-                    i--;
-                }
+                for (int i = 0; i < Products.Count; i++)
+                    if (Products[i].GetType() == typeof(Dairy_products) && Products[i].CreateDateTime.AddDays(Products[i].ExpirationDate) < DateTime.Now)
+                    {
+                        writeFile.Write(Products[i].ToString());
+                        Products.Remove(Products[i]);
+                        i--;
+                    }
 
-            writeFile.WriteLine();
-            writeFile.Close();
+                writeFile.WriteLine();
+                writeFile.Close();
+            }
         }
 
         //Summary:
@@ -123,10 +150,10 @@ namespace Task1
 
         public override string ToString()
         {
-            string output = "\nStorage:\n";
+            string output = "Storage:\n";
 
-            for(int i = 0; i < Products.Count; i++)
-                output += $"Product {i + 1}:\n" + this[i].ToString();
+            for (int i = 0; i < Products.Count; i++)
+                output += $"Product {i + 1}:\n" + this[i].ToString() + "\n";
 
             return output;
         }
@@ -137,7 +164,7 @@ namespace Task1
         //    String with Products data
         public string Print()
         {
-            return this.ToString();
+            return ToString();
         }
     }
 }
