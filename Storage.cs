@@ -9,7 +9,7 @@ namespace Task1
     //Summary:
     //    Class contains Products in Storage
     class Storage
-    {
+    {Лінки в цій задачі - це те, що треба
         public event Action<Storage> OnShow;
         public event Action<Storage, string> OnWrongInput;
 
