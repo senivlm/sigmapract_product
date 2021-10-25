@@ -9,7 +9,7 @@ namespace Task1
     class Dairy_products : Product
     {
         //Standarts mark-up
-        readonly List<(int, int)> ExpirationDatePercent;
+        private readonly List<(int, int)> _expirationDatePercent;
 
         //Exceptions:
         //    ArgumentException
@@ -17,7 +17,7 @@ namespace Task1
         public Dairy_products(string name, double price, double weight, int expirationDate, DateTime dateTime)
             : base(name, price, weight, expirationDate, dateTime)
         {
-            ExpirationDatePercent =  new List<(int, int)> { (7, 15), (365, 8), (int.MaxValue, 2) };
+            _expirationDatePercent =  new List<(int, int)> { (7, 15), (365, 8), (int.MaxValue, 2) };
         }
 
         public override bool Equals(object obj)
@@ -32,10 +32,7 @@ namespace Task1
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return typeof(Dairy_products).Name.GetHashCode() + ToString().GetHashCode();
-        }
+        public override int GetHashCode() => nameof(Dairy_products).GetHashCode() + ToString().GetHashCode();
 
         public override string ToString()
         {
@@ -46,8 +43,8 @@ namespace Task1
         //    ArgumentException
         public override void ChangePrice(double percent)
         {
-            int tempPercent = ExpirationDatePercent[ExpirationDatePercent.Count - 1].Item2;
-            foreach (var elem in ExpirationDatePercent)
+            int tempPercent = _expirationDatePercent[_expirationDatePercent.Count - 1].Item2;
+            foreach (var elem in _expirationDatePercent)
                 if (percent <= elem.Item1)
                     tempPercent = elem.Item2;
 

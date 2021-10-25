@@ -109,10 +109,7 @@ namespace Task1
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return typeof(Product).Name.GetHashCode() + ToString().GetHashCode();
-        }
+        public override int GetHashCode() => nameof(Product).GetHashCode() + ToString().GetHashCode();
 
         public override string ToString()
         {

@@ -52,10 +52,7 @@ namespace Task1
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return typeof(Meat).Name.GetHashCode() + ToString().GetHashCode();
-        }
+        public override int GetHashCode() => nameof(Meat).GetHashCode() + ToString().GetHashCode();
 
         public override string ToString()
         {
