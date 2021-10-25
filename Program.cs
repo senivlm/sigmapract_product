@@ -7,27 +7,12 @@ namespace Task1
 {
     class Program
     {
-        public event Action<int> As;
-
-        static void ShowMessage(string message)
-        {
-            Console.WriteLine("\n" + message);
-        }
-
-        static void PrintInLogWrongInput(string path, string message)
-        {
-            using (StreamWriter writer = new StreamWriter(path))
-            {
-                writer.WriteLine(DateTime.Now);
-                writer.WriteLine(message);
-            }
-        }
-
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
+            //Buy and Check
             try
             {
                 Product product1 = new Product("Apple", 5.50, 0.120, 20, new DateTime(2021, 9, 15));
@@ -42,30 +27,22 @@ namespace Task1
             }
             catch(Exception exception)
             {
-                ShowException.ConsoleWrite("Buy or Check: " + exception.Message);
+                ShowException.ConsoleWrite(exception.Message);
             }
 
             //Storage
             try
             {
                 Storage storage = new Storage();
+                storage.OnShow += StorageEvents.FindAndRemoveOverdueProducts;
+                storage.OnWrongInput += StorageEvents.WrongProductInput;
 
-                storage.OnAdd += ShowMessage;
-                storage.OnWrongInput += PrintInLogWrongInput;
-
-                storage.ReadInput();
-                Console.WriteLine("Removing overdue Dairy Products...");
-                storage.RemoveOverdueDairyProduct("../../../files/removedDairyProducts.txt");
+                storage.ReadInput(ProductInput.StorageProductInput());
+                //Вивід storage та спрацювання події пошуку перетермінованих товарів
                 Console.WriteLine(storage.Print());
 
-                //
-                Product product1 = new Product("Apple", 5.50, 0.120, 5, new DateTime(2021, 9, 15));
-                storage.AddProduct(product1);
-                Console.WriteLine(storage);
-                //
-
                 Storage storage1 = new Storage();
-                storage1.ReadInput();
+                storage1.ReadInput(ProductInput.StorageProductInput());
 
                 //Всі спільні продукти
                 StorageSearcher storageSearcher = new StorageSearcher();
@@ -85,6 +62,18 @@ namespace Task1
 
             }
             catch (FileNotFoundException exception)
+            {
+                ShowException.ConsoleWrite("Storage: " + exception.Message);
+            }
+            catch (IndexOutOfRangeException exception)
+            {
+                ShowException.ConsoleWrite("Storage: " + exception.Message);
+            }
+            catch (ArgumentNullException exception)
+            {
+                ShowException.ConsoleWrite("Storage: " + exception.Message);
+            }
+            catch (ArgumentException exception)
             {
                 ShowException.ConsoleWrite("Storage: " + exception.Message);
             }

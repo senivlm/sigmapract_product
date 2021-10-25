@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace Task1
 {
@@ -10,133 +10,137 @@ namespace Task1
     //    Class contains Products in Storage
     class Storage
     {
-        //
-        public const string PATH = @"D:\Andrii\Programyvannya\C#\Sigma pract\Product\Task\output.txt";
+        public event Action<Storage> OnShow;
+        public event Action<Storage, string> OnWrongInput;
 
-        public delegate void PrintMessageHandler(string message);
-        public delegate void PrintIncorrect(string path, string message);
-
-        public virtual event PrintMessageHandler OnAdd;
-        public virtual event PrintIncorrect OnWrongInput;
-        //
-
-        public List<Product> Products { get; }
+        private List<Product> _products;
+        public List<Product> Products
+        {
+            get
+            {
+                return new List<Product>(_products);
+            }
+        }
 
         public Product this[int index]
         {
             get
             {
-                if (index < 0 || index >= Products.Count)
+                if (index < 0 || index >= _products.Count)
                     throw new IndexOutOfRangeException("Index out of range");
-                else
-                    return Products[index];
+                return _products[index];
             }
-
             set
             {
-                if (index < 0 || index >= Products.Count)
+                if (index < 0 || index >= _products.Count)
                     throw new IndexOutOfRangeException("Index out of range");
-                else
-                    Products[index] = value;
+                if (value == null)
+                    throw new ArgumentNullException("Product cannot be null");
+                _products[index] = value;
             }
         }
 
         public Storage()
         {
-            Products = new List<Product>();
+            _products = new List<Product>();
         }
 
         //Summary:
-        //    Fills Storage with Products
-        public void ReadInput()
+        //    Fills Storage with Products from input string
+        //Exceptions:
+        //    ArgumentException
+        public void ReadInput(string input)
         {
-            Products.Clear();
+            _products.Clear();
 
-            StringReader inputStringReader = new StringReader(ProductInput.StorageProductInput());
-
-            int productsCount = Convert.ToInt32(inputStringReader.ReadLine());
-            for (int i = 0; i < productsCount; i++)
+            using (StringReader inputStringReader = new StringReader(input))
             {
-                int productsType = Convert.ToInt32(inputStringReader.ReadLine());
-                string[] productInfo = inputStringReader.ReadLine().Split(" ");
+                int productsCount;
+                if (!Int32.TryParse(inputStringReader.ReadLine(), out productsCount))
+                    throw new ArgumentException("Incorrect Products count");
 
-                switch (productsType)
+                for (int i = 0; i < productsCount; i++)
                 {
-                    case 1:
-                        Meat.Category category;
-                        Meat.Type type;
-                        if (Enum.TryParse(productInfo[5], out category) && Enum.TryParse(productInfo[6], out type))
+                    int productsType = Convert.ToInt32(inputStringReader.ReadLine());
+
+                    string productInfo;
+                    if (inputStringReader.Peek() != -1)
+                        productInfo = inputStringReader.ReadLine();
+                    else
+                        return;
+
+                    try
+                    {
+                        switch (productsType)
                         {
-                            string[] dateList = productInfo[4].Split(".");
-                            DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
-                            Products.Add(new Meat(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), 
-                                Convert.ToInt32(productInfo[3]), dateTime, category, type));
+                            case 1:
+                                _products.Add(Meat.Parse(productInfo));
+                                break;
+                            case 2:
+                                _products.Add(Dairy_products.Parse(productInfo));
+                                break;
+                            case 3:
+                                _products.Add(Product.Parse(productInfo));
+                                break;
                         }
-                        else
-                        {
-                            OnWrongInput?.Invoke(PATH, "Wrong product!");
-                        }
-                        break;
-                    case 2:
-                        {
-                            string[] dateList = productInfo[4].Split(".");
-                            DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
-                            Products.Add(new Dairy_products(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), 
-                                Convert.ToInt32(productInfo[3]), dateTime));
-                        }
-                        break;
-                    case 3:
-                        {
-                            string[] dateList = productInfo[4].Split(".");
-                            DateTime dateTime = new DateTime(Convert.ToInt32(dateList[2]), Convert.ToInt32(dateList[1]), Convert.ToInt32(dateList[0]));
-                            Products.Add(new Product(productInfo[0], Convert.ToDouble(productInfo[1]), Convert.ToDouble(productInfo[2]), Convert.ToInt32(productInfo[3]), dateTime));
-                        }
-                        break;
+                    }
+                    catch (ArgumentException exception)
+                    {
+                        OnWrongInput?.Invoke(this, productInfo + "\nError: " + exception.Message);
+                    }
                 }
             }
         }
 
         public void AddProduct(Product product)
         {
-            OnAdd?.Invoke("Add Product to Storage");
-            Products.Add(product);
+            if (product == null) throw new ArgumentNullException("Cannot add. Product is null");
+
+            _products.Add(product);
         }
 
+        public void AddProducts(List<Product> products)
+        {
+            if (products == null) throw new ArgumentNullException("Cannot add. Products list is null");
+
+            foreach (Product elem in products)
+                AddProduct(elem);
+        }
+
+        public bool RemoveProduct(Product product)
+        {
+            if (product == null) throw new ArgumentNullException("Cannot remove. Product is null");
+
+            return _products.Remove(product);
+        }
+
+        public int RemoveProductsByName(string name)
+        {
+            if (name == null) throw new ArgumentNullException("Cannot remove. Name is null");
+
+            return _products.RemoveAll(elem => elem.Name == name);
+        }
+
+        public int RemoveProducts(Predicate<Product> match)
+        {
+            if (match == null) throw new ArgumentNullException("Cannot remove. Predicate is null");
+
+            return _products.RemoveAll(match);
+        }
+
+        public void RemoveAllProducts() => _products.Clear();
+
         //Summary:
-        //    Finds in Products Meat
+        //    Finds T-type products in Products list
         //Returns:
-        //    List of Meat
-        public List<Product> FindMeatProduct()
-        {
-            List<Product> meatProducts = new List<Product>();
-
-            foreach (var elem in Products)
-                if (elem.GetType() == typeof(Meat))
-                    meatProducts.Add(elem);
-
-            return meatProducts;
-        }
+        //    List of T-type product
+        public List<T> FindProducts<T>() where T : Product => _products.FindAll(product => product.GetType() == typeof(T)).Select(elem => elem as T).ToList();
 
         //Summary:
-        //    Removes overdue Dairy Products and writes data in log
-        public void RemoveOverdueDairyProduct(string path)
-        {
-            using (StreamWriter writeFile = new StreamWriter(path, true))
-            {
-                writeFile.WriteLine("Date: " + DateTime.Now + "\tRemoved: ");
-
-                for (int i = 0; i < Products.Count; i++)
-                    if (Products[i].GetType() == typeof(Dairy_products) && Products[i].CreateDateTime.AddDays(Products[i].ExpirationDate) < DateTime.Now)
-                    {
-                        writeFile.Write(Products[i].ToString());
-                        Products.Remove(Products[i]);
-                        i--;
-                    }
-
-                writeFile.WriteLine();
-                writeFile.Close();
-            }
-        }
+        //    Finds overdue products list
+        //Returns:
+        //    List of overdue products
+        public List<Product> OverdueProducts() => _products.FindAll(elem => elem.CreateDateTime.AddDays(elem.ExpirationDate) < DateTime.Now);
 
         //Summary:
         //    Change price for all Products
@@ -144,16 +148,16 @@ namespace Task1
         //    ArgumentException
         public void ChangePrice(double percent)
         {
-            foreach (var elem in Products)
+            foreach (var elem in _products)
                 elem.ChangePrice(percent);
         }
 
         public override string ToString()
         {
-            string output = "Storage:\n";
+            string output = "Storage:";
 
-            for (int i = 0; i < Products.Count; i++)
-                output += $"Product {i + 1}:\n" + this[i].ToString() + "\n";
+            for (int i = 0; i < _products.Count; i++)
+                output += $"\nProduct {i + 1}: Type: {this[i].GetType().Name}\n" + this[i].ToString();
 
             return output;
         }
@@ -164,6 +168,7 @@ namespace Task1
         //    String with Products data
         public string Print()
         {
+            OnShow?.Invoke(this);
             return ToString();
         }
     }
